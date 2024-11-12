@@ -15,7 +15,7 @@ const Itempanel = ({ pageTitle }) => {
 
   const getTasksData = useSelector((state) => state.apis.getItemsData);
   const isOpen = useSelector((state) => state.modal.isOpen);
-  console.log(isOpen);
+  // console.log(isOpen);
   // console.log(getTasksData);
 
   const [loading, setLoading] = useState(false);
@@ -42,6 +42,7 @@ const Itempanel = ({ pageTitle }) => {
       {userKey ? (
         <div className="panel-wraper w-full h-full">
           {isOpen && <Modal />}
+
           <PageTitle title={pageTitle} />
           <div className="items flex flex-wrap">
             {loading ? (
@@ -58,7 +59,6 @@ const Itempanel = ({ pageTitle }) => {
             ) : (
               getTasksData?.map((item, idx) => <Item key={idx} task={item} />)
             )}
-
             <AddItem />
           </div>
         </div>

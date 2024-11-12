@@ -36,7 +36,7 @@ const Navbar = ({ menuIdx }) => {
   );
 
   useEffect(() => {
-    const storedData = JSON.parse(localStorage.getItem(`authData`));
+    const storedData = JSON.parse(localStorage.getItem("authData"));
     if (storedData) {
       dispatch(login({ authData: storedData }));
       setIsAuthenticated(true);
@@ -57,7 +57,7 @@ const Navbar = ({ menuIdx }) => {
       <div className="logo-wrapper flex w-full items-center justify-center gap-8">
         <div className="logo"></div>
         <h2 className="font-semibold text-xl">
-          <Link to="/">Yoogyu</Link>
+          <Link to="/">MARSHALL</Link>
         </h2>
       </div>
 
@@ -83,7 +83,7 @@ const Navbar = ({ menuIdx }) => {
             onClick={handleLogoutClick}
           >
             <FcGoogle className="w-5 h-5" />
-            <span>{given_name}님 Logout</span>
+            <span className="text-sm">{given_name}님 Logout</span>
           </button>
         </div>
       ) : (
@@ -95,7 +95,7 @@ const Navbar = ({ menuIdx }) => {
             />
             <button className="flex justify-center items-center gap-2 bg-gray-300 text-gray-900 py-3 px-4 rounded-md w-full">
               <FcGoogle className="w-5 h-5" />
-              <span>Google Login</span>
+              <span className="text-sm">Google Login</span>
             </button>
           </GoogleOAuthProvider>
         </div>

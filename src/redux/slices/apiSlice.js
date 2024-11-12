@@ -3,12 +3,30 @@ import {
   DELETE_TASK_API_URL,
   GET_TASKS_API_URL,
   POST_TASK_API_URL,
+  UPDATE_TASK_API_URL,
 } from "../../utils/apiUrl";
 import {
   deleteRequest,
   getRequest,
   postRequest,
+  putRequest,
 } from "../../utils/requestMethods";
+
+const updateItemFetchThunk = (actionType, apiURL) => {
+  return createAsyncThunk(actionType, async (updateData) => {
+    const options = {
+      body: JSON.stringify(updateData),
+    };
+
+    return await putRequest(apiURL, options);
+  });
+};
+
+// update item data
+export const fetchUpdateItemData = updateItemFetchThunk(
+  "fetchUpdateItem", // action type
+  UPDATE_TASK_API_URL // 요청 url
+); // thunk 함수 호출
 
 const getItemsFetchThunk = (actionType, apiURL) => {
   return createAsyncThunk(actionType, async (userId) => {
@@ -48,7 +66,6 @@ const postItemFetchThunk = (actionType, apiURL) => {
     const options = {
       body: JSON.stringify(postData), // 표준 json 문자열로 변환
     };
-    const fullPath = `${apiURL}/${postData}`;
     return await postRequest(apiURL, options);
   });
 };
@@ -78,17 +95,21 @@ const apiSlice = createSlice({
     getItemsData: null,
     deleteItemData: null,
     postItemData: null,
+    updateItemData: null,
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchGetItemsData.fulfilled, handleFulfilled("getItemsData")) // 요청 성공 시
-      .addCase(fetchGetItemsData.rejected, handleRejected) // 요청 실패 시
+      .addCase(fetchGetItemsData.fulfilled, handleFulfilled("getItemsData"))
+      .addCase(fetchGetItemsData.rejected, handleRejected)
 
-      .addCase(fetchDeleteItemData.fulfilled, handleFulfilled("deleteItemData")) // 요청 성공 시
-      .addCase(fetchDeleteItemData.rejected, handleRejected) // 요청 실패 시
+      .addCase(fetchDeleteItemData.fulfilled, handleFulfilled("deleteItemData"))
+      .addCase(fetchDeleteItemData.rejected, handleRejected)
 
-      .addCase(fetchPostItemData.fulfilled, handleFulfilled("postItemData")) // 요청 성공 시
-      .addCase(fetchPostItemData.rejected, handleRejected); // 요청 실패 시
+      .addCase(fetchPostItemData.fulfilled, handleFulfilled("postItemData"))
+      .addCase(fetchPostItemData.rejected, handleRejected)
+
+      .addCase(fetchUpdateItemData.fulfilled, handleFulfilled("updateItemData"))
+      .addCase(fetchUpdateItemData.rejected, handleRejected);
   },
 }); // slice 객체 저장
 
