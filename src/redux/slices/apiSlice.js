@@ -4,12 +4,14 @@ import {
   GET_TASKS_API_URL,
   POST_TASK_API_URL,
   UPDATE_TASK_API_URL,
+  UPDATE_COMPLETED_TASK_API_URL,
 } from "../../utils/apiUrl";
 import {
   deleteRequest,
   getRequest,
   postRequest,
   putRequest,
+  patchRequest,
 } from "../../utils/requestMethods";
 
 const updateItemFetchThunk = (actionType, apiURL) => {
@@ -76,6 +78,27 @@ export const fetchPostItemData = postItemFetchThunk(
   POST_TASK_API_URL
 );
 
+// update completed thunk function 정의
+const UpdateCompletedFetchThunk = (actionType, apiURL) => {
+  return createAsyncThunk(actionType, async (completedData) => {
+    console.log(completedData);
+    const options = {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(completedData), // 표준 json 문자열로 변환
+    };
+    return await patchRequest(apiURL, options);
+  });
+};
+
+// update completed item
+export const fetchUpdateCompletedItemData = UpdateCompletedFetchThunk(
+  "fetchUpdateCompletedItem",
+  UPDATE_COMPLETED_TASK_API_URL
+);
+
 // handleFulfilled 함수 정의 : 요청 성공 시 상태 업데이트 로직을 별도의 함수로 분리
 const handleFulfilled = (stateKey) => (state, action) => {
   state[stateKey] = action.payload; // action.payload에 응답 데이터가 들어있음
@@ -96,6 +119,7 @@ const apiSlice = createSlice({
     deleteItemData: null,
     postItemData: null,
     updateItemData: null,
+    updateCompletedData: null,
   },
   extraReducers: (builder) => {
     builder
@@ -109,7 +133,12 @@ const apiSlice = createSlice({
       .addCase(fetchPostItemData.rejected, handleRejected)
 
       .addCase(fetchUpdateItemData.fulfilled, handleFulfilled("updateItemData"))
-      .addCase(fetchUpdateItemData.rejected, handleRejected);
+      .addCase(fetchUpdateItemData.rejected, handleRejected)
+      .addCase(
+        fetchUpdateCompletedItemData.fulfilled,
+        handleFulfilled("updateCompletedData")
+      )
+      .addCase(fetchUpdateCompletedItemData.rejected, handleRejected);
   },
 }); // slice 객체 저장
 
