@@ -79,9 +79,10 @@ export const fetchPostItemData = postItemFetchThunk(
 );
 
 // update completed thunk function 정의
-const UpdateCompletedFetchThunk = (actionType, apiURL) => {
+const updateCompletedFetchThunk = (actionType, apiURL) => {
   return createAsyncThunk(actionType, async (completedData) => {
     console.log(completedData);
+
     const options = {
       method: "PATCH",
       headers: {
@@ -94,8 +95,8 @@ const UpdateCompletedFetchThunk = (actionType, apiURL) => {
 };
 
 // update completed item
-export const fetchUpdateCompletedItemData = UpdateCompletedFetchThunk(
-  "fetchUpdateCompletedItem",
+export const fetchUpdateCompletedData = updateCompletedFetchThunk(
+  "fetchupdateCompletedItem",
   UPDATE_COMPLETED_TASK_API_URL
 );
 
@@ -134,11 +135,12 @@ const apiSlice = createSlice({
 
       .addCase(fetchUpdateItemData.fulfilled, handleFulfilled("updateItemData"))
       .addCase(fetchUpdateItemData.rejected, handleRejected)
+
       .addCase(
-        fetchUpdateCompletedItemData.fulfilled,
+        fetchUpdateCompletedData.fulfilled,
         handleFulfilled("updateCompletedData")
       )
-      .addCase(fetchUpdateCompletedItemData.rejected, handleRejected);
+      .addCase(fetchUpdateCompletedData.rejected, handleRejected);
   },
 }); // slice 객체 저장
 

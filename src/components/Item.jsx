@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import {
   fetchDeleteItemData,
   fetchGetItemsData,
-  fetchUpdateCompletedItemData,
+  fetchUpdateCompletedData,
 } from "../redux/slices/apiSlice";
 
 import { toast } from "react-toastify";
@@ -98,6 +98,7 @@ const Item = ({ task }) => {
   const changeCompleted = async () => {
     // setIsCompleted(!isCompleted)을 호출하면 상태 업데이트가 비동기적으로 이루어지기 때문에, isCompleted의 값이 즉시 변경되지 않는다.
     // 따라서 updateCompletedData 객체를 생성할 때 isCompleted의 이전 값이 사용된다. 이로 인해 true/false가 한 단계씩 밀리게 된다.
+
     const newIsCompleted = !isCompleted; // 데이터베이스에 있는 iscompleted의 반대값 저장
     setIsCompleted(newIsCompleted);
 
@@ -109,9 +110,7 @@ const Item = ({ task }) => {
     };
 
     try {
-      await dispatch(
-        fetchUpdateCompletedItemData(updateCompletedData)
-      ).unwrap();
+      await dispatch(fetchUpdateCompletedData(updateCompletedData)).unwrap();
       newIsCompleted
         ? toast.success("완료 처리 되었습니다.")
         : toast.success("미완료 처리 되었습니다.");
@@ -123,24 +122,26 @@ const Item = ({ task }) => {
   };
 
   return (
-    <div className="item w-1/3 h-[25vh] p-[0.25rem]">
+    <div className="item lg:w-1/3 md:w-1/2 w-full h-[25vh] p-[0.25rem]">
       <div className="w-full h-full border border-gray-500 rounded-md bg-gray-950 py-3 px-4 flex flex-col justify-between">
         <div className="upper">
-          <h2 className="item-title text-xl font-normal mb-3 relative pb-2 flex justify-between">
+          <h2 className="item-title lg:text-xl text-[0.875rem] font-normal mb-3 relative pb-2 flex justify-between">
             <span className="item-line w-full absolute bottom-0 left-0 h-[1px] bg-gray-500"></span>
             {title}
             <span
-              className="text-sm py-1 px-3 border border-gray-500 rounded-md hover:bg-gray-700 cursor-pointer"
+              className="lg:text-sm text-[0.75rem] py-1 px-3 border border-gray-500 rounded-md hover:bg-gray-700 cursor-pointer"
               onClick={handleOpenDetailModal}
             >
               자세히
             </span>
           </h2>
-          <p>{textLengthOverCut(description, 60, "...")}</p>
+          <p className="text-sm lg:text-[1rem]">
+            {textLengthOverCut(description, 60, "...")}
+          </p>
         </div>
         <div className="lower">
-          <p className="date text-sm mb-1">{date}</p>
-          <div className="item-footer flex justify-between">
+          <p className="date lg:text-sm text-[0.75rem] mb-1">{date}</p>
+          <div className="item-footer flex justify-between flex-col md:flex-row gap-2">
             <div className="item-footer-left flex gap-2">
               {iscompleted ? (
                 <button
@@ -157,6 +158,7 @@ const Item = ({ task }) => {
                   Incompleted
                 </button>
               )}
+
               {isimportant && (
                 <button className="item-btn bg-red-400">Important</button>
               )}
